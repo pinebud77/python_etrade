@@ -5,6 +5,7 @@ import logging
 
 
 quote_url = 'https://etws.etrade.com/market/rest/quote/'
+place_order_url = 'https://etws.etrade.com/order/rest/placeequityorder'
 
 
 class Quote:
@@ -28,3 +29,52 @@ class Stock:
         self.session = session
         self.count = None
         self.value = None
+        self.last_value = 0.0
+        self.last_sell_price = 0.0
+        self.last_buy_price = 0.0
+        self.last_count = 0
+        self.budget = 0.0
+        self.algorithm_string = 'ahnyung'
+        self.stance = 1
+
+    def order(self, count, order_id):
+        if not self.session:
+            raise BrokenPipeError
+        if count == 0:
+            raise ValueError
+
+        outer_dict = dict()
+        outer_dict['PlaceEquityOrder'] = dict()
+        order_dict = outer_dict['PlaceEquityOrder']
+        order_dict['-xmlns'] = 'http://order.etws.etrade.com'
+        order_dict['EquityOrderRequest'] = dict()
+        input_dict = order_dict['EquityOrderRequest']
+
+        input_dict['accountId'] = self.account.id
+        input_dict['symbol'] = self.symbol
+        if count > 0:
+            input_dict['orderAction'] = 'BUY'
+            input_dict['quantity'] = count
+        else:
+            input_dict['orderAction'] = 'SELL'
+            input_dict['quantity'] = -count
+        input_dict['clientOrderId'] = order_id
+        input_dict['priceType'] = 'MARKET'
+        input_dict['marketSession'] = 'REGULAR'
+        input_dict['orderTerm'] = 'GOOD_FOR_DAY'
+
+        response = self.session.post(place_order_url, json=outer_dict)
+        res_string = response.content.decode('utf-8')
+        if 'ErrorMessage' in res_string:
+            logging.error(res_string)
+            return False
+
+        return True
+
+    def get_total_value(self):
+        if self.count is None:
+            return None
+        if self.value is None:
+            return None
+
+        return self.count * self.value

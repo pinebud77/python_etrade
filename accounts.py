@@ -17,6 +17,7 @@ class Account:
         self.net_value = None
         self.cash_to_trade = None
         self.stock_list = []
+        self.mode = 'setup'
 
     def update(self):
         if not self.session:
@@ -35,10 +36,13 @@ class Account:
         logging.debug(res_dict)
 
         cont_dict = res_dict['json.accountPositionsResponse']
+        if cont_dict['count'] == 0:
+            return
+
         for json_position in cont_dict['response']:
             symbol = json_position['productId']['symbol']
             count = json_position['qty']
-            value = json_position['marketValue']
+            value = json_position['marketValue'] / count
 
             stock = stocks.Stock(symbol, self, self.session)
             stock.count = int(count)
@@ -53,3 +57,9 @@ class Account:
 
         return None
 
+    def add_empty_stock(self, stock):
+        if self.get_stock(stock.symbol):
+            return False
+
+        self.stock_list.append(stock)
+        return True
