@@ -37,7 +37,7 @@ class Stock:
         self.algorithm_string = 'ahnyung'
         self.stance = 1
 
-    def order(self, count, order_id):
+    def market_order(self, count, order_id):
         if not self.session:
             raise BrokenPipeError
         if count == 0:
@@ -53,11 +53,9 @@ class Stock:
         input_dict['accountId'] = self.account.id
         input_dict['symbol'] = self.symbol
         if count > 0:
-            logging.info('buying %s: %d' % (self.symbol, count))
             input_dict['orderAction'] = 'BUY'
             input_dict['quantity'] = count
         else:
-            logging.info('Selling %s: %d' % (self.symbol, count))
             input_dict['orderAction'] = 'SELL'
             input_dict['quantity'] = -count
         input_dict['clientOrderId'] = order_id
@@ -70,6 +68,14 @@ class Stock:
         if 'ErrorMessage' in res_string:
             logging.error(res_string)
             return False
+
+        self.count += count
+        if count > 0:
+            logging.info('account %s - bought %s: %d' % (self.account.id, self.symbol, count))
+            self.last_buy_price = self.value
+        else:
+            logging.info('account %s - sold %s: %d' % (self.account.id, self.symbol, count))
+            self.last_sell_price = self.value
 
         return True
 
