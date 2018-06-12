@@ -14,9 +14,11 @@ Implementation target :
 
 Done :
 * complete login/logout API without WEB browser access for verficiation
+* account : net_value, cash value available for trade, stock list
+* quote : quote ask value
 
 ToDO Next :
-* getting price information
+* stock : trade
 
 Required Libraries :
 * requests
