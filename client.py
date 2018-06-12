@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
+from . import accounts
 from . import login
+from . import stocks
 
 
 class Client:
@@ -18,7 +20,7 @@ class Client:
 
     def renew_connection(self):
         if not self.session:
-            return False
+            raise BrokenPipeError
 
         result = login.renew_token(self.session)
         if not result:
@@ -28,11 +30,35 @@ class Client:
 
     def logout(self):
         if not self.session:
-            return True
+            raise BrokenPipeError
 
         login.revoke_token(self.session)
         self.session = None
         return True
+
+    def get_account(self, id):
+        if not self.session:
+            raise BrokenPipeError
+
+        account = accounts.Account(id, self.session)
+        account.update()
+
+        if account.net_value is not None:
+            return account
+
+        return None
+
+    def get_quote(self, symbol):
+        if not self.session:
+            raise BrokenPipeError
+
+        quote = stocks.Quote(symbol, self.session)
+        quote.update()
+
+        if quote.ask is not None:
+            return quote
+
+        return None
 
 
 
