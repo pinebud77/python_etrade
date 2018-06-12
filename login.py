@@ -67,7 +67,7 @@ def etrade_login(client_key, client_secret, username, passwd):
     content_string = str(response.content)
 
     if 'Log On to E*TRADE' in content_string:
-        logging.info('logging in with username + password')
+        logging.debug('logging in with username + password')
         parser = FormHTMLParser()
         parser.feed(content_string)
 
@@ -80,7 +80,7 @@ def etrade_login(client_key, client_secret, username, passwd):
         logging.debug(content_string)
 
     if 'please acknowledge that you agree to allow the indicated platform' in content_string:
-        logging.info('pressing accept')
+        logging.debug('pressing accept')
         parser = FormHTMLParser()
         parser.feed(content_string)
 
@@ -91,7 +91,7 @@ def etrade_login(client_key, client_secret, username, passwd):
         logging.debug(content_string)
 
     if 'You will then be directed to the next page where you will paste the code' in content_string:
-        logging.info('getting verfication token')
+        logging.debug('getting verfication token')
         parser = FormHTMLParser(only_hidden=False)
         parser.feed(content_string)
 
