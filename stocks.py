@@ -53,9 +53,11 @@ class Stock:
         input_dict['accountId'] = self.account.id
         input_dict['symbol'] = self.symbol
         if count > 0:
+            logging.info('buying %s: %d' % (self.symbol, count))
             input_dict['orderAction'] = 'BUY'
             input_dict['quantity'] = count
         else:
+            logging.info('Selling %s: %d' % (self.symbol, count))
             input_dict['orderAction'] = 'SELL'
             input_dict['quantity'] = -count
         input_dict['clientOrderId'] = order_id
