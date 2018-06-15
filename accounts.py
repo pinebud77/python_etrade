@@ -41,12 +41,12 @@ class Account:
 
         for json_position in cont_dict['response']:
             symbol = json_position['productId']['symbol']
-            count = int(json_position['qty'])
-            value = float(json_position['marketValue']) / count
+            count = json_position['qty']
+            value = json_position['marketValue']
 
             stock = stocks.Stock(symbol, self, self.session)
             stock.count = int(count)
-            stock.value = float(value)
+            stock.value = float(value) / count
 
             self.stock_list.append(stock)
 
