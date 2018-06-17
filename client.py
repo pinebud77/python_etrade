@@ -43,10 +43,9 @@ class Client:
         account = accounts.Account(id, self.session)
         account.update()
 
-        if account.net_value is not None:
-            return account
-
-        return None
+        if account.net_value is  None:
+            return None
+        return account
 
     def get_quote(self, symbol):
         if not self.session:
@@ -55,10 +54,9 @@ class Client:
         quote = stocks.Quote(symbol, self.session)
         quote.update()
 
-        if quote.ask is not None:
-            return quote
-
-        return None
+        if quote.ask is None:
+            return None
+        return quote
 
 
 

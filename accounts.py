@@ -57,9 +57,12 @@ class Account:
 
         return None
 
-    def add_empty_stock(self, stock):
-        if self.get_stock(stock.symbol):
-            return False
+    def new_stock(self, symbol):
+        stock = stocks.Stock(symbol)
+        quote = stocks.Quote(symbol, self.session)
+        quote.update()
+        stock.value = quote.price
+        stock.count = 0
 
         self.stock_list.append(stock)
-        return True
+        return stock
