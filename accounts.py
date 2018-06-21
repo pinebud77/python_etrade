@@ -26,7 +26,11 @@ class Account:
         response = self.session.get(balance_url + str(self.id) + '.json')
         res_dict = json.loads(response.content.decode('utf-8'))
 
-        cont_dict = res_dict['json.accountBalanceResponse']
+        try:
+            cont_dict = res_dict['json.accountBalanceResponse']
+        except KeyError:
+            logging.error('failed to get the account balance')
+            return False
         self.net_value = float(cont_dict['accountBalance']['netAccountValue'])
         self.cash_to_trade = float(cont_dict['accountBalance']['cashAvailableForWithdrawal'])
 
@@ -37,7 +41,7 @@ class Account:
 
         cont_dict = res_dict['json.accountPositionsResponse']
         if cont_dict['count'] == 0:
-            return
+            return True
 
         for json_position in cont_dict['response']:
             symbol = json_position['productId']['symbol']
@@ -50,6 +54,8 @@ class Account:
 
             self.stock_list.append(stock)
 
+        return True
+
     def get_stock(self, symbol):
         for stock in self.stock_list:
             if stock.symbol == symbol:
@@ -60,7 +66,8 @@ class Account:
     def new_stock(self, symbol):
         stock = stocks.Stock(symbol)
         quote = stocks.Quote(symbol, self.session)
-        quote.update()
+        if not quote.update():
+            return None
         stock.value = quote.price
         stock.count = 0
 

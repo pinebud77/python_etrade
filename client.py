@@ -41,9 +41,10 @@ class Client:
             raise BrokenPipeError
 
         account = accounts.Account(id, self.session)
-        account.update()
+        if not account.update():
+            return None
 
-        if account.net_value is  None:
+        if account.net_value is None:
             return None
         return account
 

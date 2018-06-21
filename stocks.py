@@ -36,6 +36,7 @@ class Stock:
         self.budget = 0.0
         self.algorithm_string = 'ahnyung'
         self.stance = 1
+        self.failure_reason = 'success'
 
     def market_order(self, count, order_id):
         if not self.session:
@@ -68,8 +69,11 @@ class Stock:
         response = self.session.post(place_order_url, json=outer_dict)
         res_string = response.content.decode('utf-8')
         if 'ErrorMessage' in res_string:
-            logging.error(res_string)
+            self.failure_reason = res_string.split('<ErrorMessage>')[1].split('</ErrorMessage>')[0]
+            logging.error(self.failure_reason)
             return False
+
+        self.failure_reason = 'success'
 
         self.count += count
         if count > 0:
@@ -78,6 +82,9 @@ class Stock:
             self.last_sell_price = self.value
 
         return True
+
+    def get_failure_reason(self):
+        return self.failure_reason
 
     def get_total_value(self):
         if self.count is None:
