@@ -61,14 +61,16 @@ class Account:
             if stock.symbol == symbol:
                 return stock
 
+        logging.error('there is no stock')
         return None
 
     def new_stock(self, symbol):
         stock = stocks.Stock(symbol, self, self.session)
         quote = stocks.Quote(symbol, self.session)
         if not quote.update():
+            logging.error('getting quote failed')
             return None
-        stock.value = quote.price
+        stock.value = quote.ask
         stock.count = 0
 
         self.stock_list.append(stock)
