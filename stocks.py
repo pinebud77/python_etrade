@@ -21,6 +21,8 @@ class Quote:
 
         self.ask = float(res_dict['quoteResponse']['quoteData']['all']['ask'])
 
+        return True
+
 
 class Stock:
     def __init__(self, symbol, account, session):

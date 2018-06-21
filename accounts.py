@@ -64,7 +64,7 @@ class Account:
         return None
 
     def new_stock(self, symbol):
-        stock = stocks.Stock(symbol)
+        stock = stocks.Stock(symbol, self, self.session)
         quote = stocks.Quote(symbol, self.session)
         if not quote.update():
             return None
