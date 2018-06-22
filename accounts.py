@@ -32,7 +32,7 @@ class Account:
             logging.error('failed to get the account balance')
             return False
         self.net_value = float(cont_dict['accountBalance']['netAccountValue'])
-        self.cash_to_trade = float(cont_dict['accountBalance']['cashAvailableForWithdrawal'])
+        self.cash_to_trade = float(cont_dict['cashAccountBalance']['cashAvailableForInvestment'])
 
         response = self.session.get(position_url + str(self.id) + '.json')
         res_dict = json.loads(response.content.decode('utf-8'))
