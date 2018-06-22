@@ -2,7 +2,6 @@
 
 import logging
 import json
-
 from . import stocks
 
 
@@ -21,6 +20,7 @@ class Account:
 
     def update(self):
         if not self.session:
+            logging.error('session does not exist')
             raise BrokenPipeError
 
         response = self.session.get(balance_url + str(self.id) + '.json')
@@ -41,6 +41,7 @@ class Account:
 
         cont_dict = res_dict['json.accountPositionsResponse']
         if cont_dict['count'] == 0:
+            logging.info('there is no stock in this account')
             return True
 
         for json_position in cont_dict['response']:
@@ -61,7 +62,7 @@ class Account:
             if stock.symbol == symbol:
                 return stock
 
-        logging.error('there is no stock')
+        logging.error('there is no such stock in this account %s' % symbol)
         return None
 
     def new_stock(self, symbol):

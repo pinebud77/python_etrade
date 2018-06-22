@@ -1,7 +1,7 @@
 python-etrade
 =============
 
-ha.. the verification bypass is not working. -_-;; the auth part is useless maybe..
+hah.. deprecated.. the verification bypass is not working. -_-;; the auth part is useless maybe..
 
 This library is for the personal system trading implementation.
 

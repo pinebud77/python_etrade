@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
-
 import json
 import logging
-
 
 quote_url = 'https://etws.etrade.com/market/rest/quote/'
 place_order_url = 'https://etws.etrade.com/order/rest/placeequityorder'
@@ -19,8 +17,10 @@ class Quote:
         res_dict = json.loads(response.content.decode('utf-8'))
         logging.debug(res_dict)
 
-        self.ask = float(res_dict['quoteResponse']['quoteData']['all']['ask'])
-
+        try:
+            self.ask = float(res_dict['quoteResponse']['quoteData']['all']['ask'])
+        except KeyError:
+            return False
         return True
 
 
