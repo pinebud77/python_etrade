@@ -32,9 +32,6 @@ class Stock:
         self.count = None
         self.value = None
         self.last_value = 0.0
-        self.last_sell_price = 0.0
-        self.last_buy_price = 0.0
-        self.last_count = 0
         self.budget = 0.0
         self.algorithm_string = 'ahnyung'
         self.stance = 1
@@ -42,8 +39,10 @@ class Stock:
 
     def market_order(self, count, order_id):
         if not self.session:
+            logging.error('no session for order')
             raise BrokenPipeError
         if count == 0:
+            logging.error('the count is 0 for order')
             raise ValueError
 
         outer_dict = dict()
@@ -78,10 +77,6 @@ class Stock:
         self.failure_reason = 'success'
 
         self.count += count
-        if count > 0:
-            self.last_buy_price = self.value
-        else:
-            self.last_sell_price = self.value
 
         return True
 
