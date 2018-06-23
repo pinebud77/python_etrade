@@ -11,6 +11,7 @@ class Quote:
         self.symbol = symbol
         self.session = session
         self.ask = None
+        self.bid = None
 
     def update(self):
         response = self.session.get(quote_url + self.symbol + '.json')
@@ -21,6 +22,12 @@ class Quote:
             self.ask = float(res_dict['quoteResponse']['quoteData']['all']['ask'])
         except KeyError:
             return False
+
+        try:
+            self.bid = float(res_dict['quoteResponse']['quoteData']['all']['bid'])
+        except KeyError:
+            return False
+
         return True
 
 

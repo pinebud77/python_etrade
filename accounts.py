@@ -71,7 +71,7 @@ class Account:
         if not quote.update():
             logging.error('getting quote failed')
             return None
-        stock.value = quote.ask
+        stock.value = (quote.ask + quote.bid) / 2
         stock.count = 0
 
         self.stock_list.append(stock)
