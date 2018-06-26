@@ -62,7 +62,6 @@ class Account:
             if stock.symbol == symbol:
                 return stock
 
-        logging.error('there is no such stock in this account %s' % symbol)
         return None
 
     def new_stock(self, symbol):
