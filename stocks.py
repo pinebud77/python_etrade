@@ -40,7 +40,7 @@ class Stock:
         self.value = None
         self.last_value = 0.0
         self.budget = 0.0
-        self.algorithm_string = 'ahnyung'
+        self.algorithm = 0
         self.stance = 1
         self.failure_reason = 'success'
 
