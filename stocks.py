@@ -40,9 +40,12 @@ class Stock:
         self.value = None
         self.last_value = 0.0
         self.budget = 0.0
-        self.algorithm = 0
-        self.stance = 1
+        self.in_algorithm = 0
+        self.in_stance = 1
+        self.out_algorithm = 0
+        self.out_stance = 1
         self.failure_reason = 'success'
+        self.float_trade = False
 
     def market_order(self, count, order_id):
         if not self.session:
